@@ -1,0 +1,11 @@
+# Math operations and functions
+print("Square root of 16: " + sqrt(16));
+print("2 to the power of 8: " + pow(2, 8));
+print("Absolute value of -42: " + abs(-42));
+print("Floor of 3.7: " + floor(3.7));
+print("Ceiling of 3.2: " + ceil(3.2));
+print("Round 3.14159 to 2 decimals: " + round(3.14159, 2));
+print("PI: " + PI);
+print("E: " + E);
+print("Sin(PI/2): " + sin(PI / 2));
+print("Cos(0): " + cos(0));

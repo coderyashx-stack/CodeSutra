@@ -1,0 +1,10 @@
+# String manipulation
+name = "CodeSutra";
+print("Original: " + name);
+print("Uppercase: " + upper(name));
+print("Lowercase: " + lower(name));
+print("Length: " + length(name));
+print("Contains 'Sutra': " + contains(name, "Sutra"));
+print("Index of 'Sutra': " + index_of(name, "Sutra"));
+print("Substring(0, 4): " + substring(name, 0, 4));
+print("Replaced: " + replace(name, "Code", "New"));

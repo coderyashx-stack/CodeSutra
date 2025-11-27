@@ -1,0 +1,21 @@
+# Grade calculator
+func getGrade(score) {
+    if (score >= 90) {
+        return "A";
+    } else if (score >= 80) {
+        return "B";
+    } else if (score >= 70) {
+        return "C";
+    } else if (score >= 60) {
+        return "D";
+    } else {
+        return "F";
+    }
+}
+
+scores = [95, 87, 72, 65, 58];
+
+for (score in scores) {
+    grade = getGrade(score);
+    print("Score: " + score + " -> Grade: " + grade);
+}

@@ -1,0 +1,14 @@
+# Working with dictionaries
+person = {
+    name: "Alice",
+    age: 30,
+    city: "New York"
+};
+
+print("Name: " + person.name);
+print("Age: " + person.age);
+print("City: " + person.city);
+
+print("Keys: " + keys(person));
+print("Values: " + values(person));
+print("Has age: " + has(person, "age"));

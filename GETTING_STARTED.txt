@@ -1,0 +1,211 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║                    🚀 CODESUTRA - GETTING STARTED 🚀                     ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+QUICK START COMMANDS
+═══════════════════════════════════════════════════════════════════════════
+
+1. INTERACTIVE REPL (Try code instantly):
+   
+   cd /workspaces/CodeSutra
+   python src/main.py
+   
+   Then type:
+   >>> print("Hello!");
+   >>> x = 10;
+   >>> print(x * 2);
+   >>> exit
+
+2. RUN EXAMPLE PROGRAMS:
+   
+   # Hello World
+   python src/main.py examples/hello.codesutra
+   
+   # Fibonacci sequence
+   python src/main.py examples/fibonacci.codesutra
+   
+   # Prime number finder
+   python src/main.py examples/primes.codesutra
+   
+   # String operations
+   python src/main.py examples/strings.codesutra
+   
+   # Math functions
+   python src/main.py examples/math.codesutra
+
+3. CREATE YOUR OWN PROGRAM:
+   
+   Create file: myprogram.codesutra
+   
+   Content:
+   func greet(name) {
+     return "Hello, " + name + "!";
+   }
+   print(greet("World"));
+   
+   Run:
+   python src/main.py myprogram.codesutra
+
+═══════════════════════════════════════════════════════════════════════════
+
+LANGUAGE BASICS
+═══════════════════════════════════════════════════════════════════════════
+
+Variables:
+  x = 10;
+  name = "Alice";
+  scores = [95, 87, 92];
+
+Functions:
+  func add(a, b) {
+    return a + b;
+  }
+  print(add(3, 4));
+
+Loops:
+  for (i in range(5)) {
+    print(i);  # 0, 1, 2, 3, 4
+  }
+
+Conditionals:
+  if (x > 10) {
+    print("big");
+  } else {
+    print("small");
+  }
+
+Arrays:
+  arr = [1, 2, 3];
+  length(arr);     # 3
+  push(arr, 4);    # [1, 2, 3, 4]
+  reverse(arr);    # [4, 3, 2, 1]
+
+Strings:
+  text = "hello";
+  upper(text);     # "HELLO"
+  length(text);    # 5
+  contains(text, "ell");  # true
+
+Dictionaries:
+  person = {name: "Bob", age: 30};
+  person.name;     # "Bob"
+  keys(person);    # ["name", "age"]
+
+═══════════════════════════════════════════════════════════════════════════
+
+BUILT-IN FUNCTIONS
+═══════════════════════════════════════════════════════════════════════════
+
+Math:
+  sqrt(16)         # 4
+  pow(2, 3)        # 8
+  abs(-5)          # 5
+  floor(3.7)       # 3
+  ceil(3.2)        # 4
+  round(3.14, 2)   # 3.14
+  sin(), cos(), tan()
+  PI, E            # Constants
+
+Arrays:
+  length(arr)
+  push(arr, item)
+  pop(arr)
+  reverse(arr)
+  sort(arr)
+  join(arr, ",")
+
+Strings:
+  upper(str), lower(str)
+  trim(str)
+  split(str, ",")
+  contains(str, "text")
+  replace(str, "old", "new")
+  substring(str, 0, 5)
+
+Dictionaries:
+  keys(dict)
+  values(dict)
+  has(dict, "key")
+
+═══════════════════════════════════════════════════════════════════════════
+
+DOCUMENTATION FILES
+═══════════════════════════════════════════════════════════════════════════
+
+README.md             → Project overview
+QUICKSTART.md         → Detailed getting started guide
+IMPLEMENTATION.md     → Complete implementation details
+CONTRIBUTING.md       → How to contribute
+
+docs/SYNTAX.md        → Complete language syntax reference
+docs/STDLIB.md        → All built-in functions documented
+docs/ARCHITECTURE.md  → How CodeSutra works internally
+
+═══════════════════════════════════════════════════════════════════════════
+
+EXAMPLE PROGRAMS
+═══════════════════════════════════════════════════════════════════════════
+
+examples/hello.codesutra         Hello World
+examples/loops.codesutra         For loop examples
+examples/factorial.codesutra     Recursive factorial
+examples/fibonacci.codesutra     Fibonacci sequence
+examples/arrays.codesutra        Array operations
+examples/strings.codesutra       String functions
+examples/dicts.codesutra         Dictionary operations
+examples/math.codesutra          Math functions
+examples/functions.codesutra     Anonymous functions
+examples/grades.codesutra        Grade calculator
+examples/primes.codesutra        Prime number finder
+
+═══════════════════════════════════════════════════════════════════════════
+
+COMMON TASKS
+═══════════════════════════════════════════════════════════════════════════
+
+1. Run the interactive REPL:
+   python src/main.py
+
+2. Run a program file:
+   python src/main.py myprogram.codesutra
+
+3. View built-in functions:
+   Look at docs/STDLIB.md
+
+4. Check syntax:
+   Look at docs/SYNTAX.md
+
+5. Understand how it works:
+   Read docs/ARCHITECTURE.md
+
+═══════════════════════════════════════════════════════════════════════════
+
+TIPS
+═══════════════════════════════════════════════════════════════════════════
+
+• Use print() to see outputs
+• Use # for comments
+• Functions are first-class values (can be stored in variables)
+• Arrays and dicts support indexing: arr[0], dict["key"]
+• Type conversions happen automatically (string + number = string)
+• Don't forget semicolons after statements!
+• Use 'func(x) { ... }' for anonymous functions
+
+═══════════════════════════════════════════════════════════════════════════
+
+NEED HELP?
+═══════════════════════════════════════════════════════════════════════════
+
+1. Read QUICKSTART.md for comprehensive guide
+2. Check examples/ folder for working code
+3. Look at docs/SYNTAX.md for language reference
+4. Review docs/STDLIB.md for function documentation
+5. Type 'help' in the REPL for built-in help
+
+═══════════════════════════════════════════════════════════════════════════
+
+Happy Coding! 🎓
+
+For more information, read QUICKSTART.md

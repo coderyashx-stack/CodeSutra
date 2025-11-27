@@ -1,0 +1,12 @@
+import pandas as pd;
+
+# Build a DataFrame from a list of dicts (use unquoted keys per CodeSutra dict syntax)
+data = pd.DataFrame([{name: "Alice", age: 30}, {name: "Bob", age: 25}]);
+print("data:", data);
+
+# Access a column and convert to list
+ages = data['age'].tolist();
+print("ages:", ages);
+
+# Use head() method
+print("head:\n", data.head());

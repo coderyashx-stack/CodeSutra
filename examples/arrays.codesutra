@@ -1,0 +1,12 @@
+# Working with arrays
+nums = [1, 2, 3, 4, 5];
+sum = 0;
+
+for (n in nums) {
+    sum = sum + n;
+}
+
+print("Sum: " + sum);
+print("Length: " + length(nums));
+print("Max: " + max(1, 2, 3, 4, 5));
+print("Min: " + min(1, 2, 3, 4, 5));

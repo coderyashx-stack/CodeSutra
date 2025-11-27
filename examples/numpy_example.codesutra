@@ -1,0 +1,16 @@
+import numpy as np;
+
+# Create a numpy array from a CodeSutra list
+arr = np.array([1, 2, 3, 4, 5]);
+print("arr:", arr);
+
+# Use numpy operations
+s = np.sum(arr);
+print("sum:", s);
+
+# Elementwise operations
+arr2 = arr * 2;
+print("arr2:", arr2);
+
+# Indexing
+print("arr[2]:", arr[2]);

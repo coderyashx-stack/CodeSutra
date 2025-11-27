@@ -1,0 +1,22 @@
+# Prime number checker
+func isPrime(n) {
+    if (n < 2) {
+        return false;
+    }
+    
+    for (i in range(2, n)) {
+        if (n % i == 0) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+# Find all primes up to 50
+print("Prime numbers up to 50:");
+for (i in range(2, 51)) {
+    if (isPrime(i)) {
+        print(i);
+    }
+}

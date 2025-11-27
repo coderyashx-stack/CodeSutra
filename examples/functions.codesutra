@@ -1,0 +1,13 @@
+# Anonymous functions and higher-order functions
+# This example shows function as first-class values
+
+double = func(x) { return x * 2; };
+square = func(x) { return x * x; };
+
+print("double(5): " + double(5));
+print("square(5): " + square(5));
+
+# Conditional expressions (ternary)
+age = 25;
+status = age >= 18 ? "adult" : "minor";
+print("Status: " + status);
