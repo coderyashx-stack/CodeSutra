@@ -1,0 +1,66 @@
+# CodeSutra Tensor Quick Start Example
+
+# Create tensors from lists
+t1 = tensor([1, 2, 3]);
+t2 = tensor([4, 5, 6]);
+
+print("Tensor 1:");
+print(t1);
+print("");
+
+# Tensor properties
+print("Shape:", t1.shape);
+print("Dtype:", t1.dtype);
+print("Device:", t1.device);
+print("");
+
+# Arithmetic operations
+added = t1 + t2;
+print("Addition (t1 + t2):");
+print(added);
+print("");
+
+product = t1 * 2;
+print("Product (t1 * 2):");
+print(product);
+print("");
+
+# Create 2D tensor
+m = tensor([[1, 2, 3], [4, 5, 6]]);
+print("2D Tensor:");
+print(m);
+print("Shape:", m.shape);
+print("");
+
+# Tensor methods
+print("Sum of all elements:", sum(t1));
+print("Mean:", mean(t1));
+print("Max:", max(t1));
+print("Min:", min(t1));
+print("");
+
+# Indexing
+print("First element of t1:", t1[0]);
+row = m[0];
+print("First row of 2D:", row);
+print("");
+
+# Factory functions
+zeros = tensor.zeros([2, 3]);
+print("Zeros tensor [2,3]:");
+print(zeros);
+print("");
+
+ones = tensor.ones([3]);
+print("Ones tensor [3]:");
+print(ones);
+print("");
+
+# Reshape
+flat = m.reshape([6]);
+print("Flattened 2D tensor:");
+print(flat);
+print("");
+
+# All done
+print("✅ Tensor operations working!");

@@ -96,3 +96,29 @@ def test_py_unwrap_helper():
     # unwrap should have returned the raw ndarray
     assert isinstance(unwrapped, np.ndarray)
     assert unwrapped.tolist() == [5, 6, 7]
+
+
+def test_py_is_proxy_helper():
+    """Test py.is_proxy() helper."""
+    if not has_module('numpy'):
+        import pytest; pytest.skip('numpy not installed')
+
+    code = "import numpy as np; arr = np.array([1,2,3]); is_proxy_arr = py.is_proxy(arr); is_proxy_list = py.is_proxy([1,2,3]);"
+    interp = run_code(code)
+    is_proxy_arr = interp.current_env.get('is_proxy_arr')
+    is_proxy_list = interp.current_env.get('is_proxy_list')
+    assert is_proxy_arr is True
+    assert is_proxy_list is False
+
+
+def test_py_is_ndarray_helper():
+    """Test py.is_ndarray() helper."""
+    if not has_module('numpy'):
+        import pytest; pytest.skip('numpy not installed')
+
+    code = "import numpy as np; arr = np.array([1,2,3]); is_nd_arr = py.is_ndarray(arr); is_nd_list = py.is_ndarray([1,2,3]);"
+    interp = run_code(code)
+    is_nd_arr = interp.current_env.get('is_nd_arr')
+    is_nd_list = interp.current_env.get('is_nd_list')
+    assert is_nd_arr is True
+    assert is_nd_list is False

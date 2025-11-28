@@ -4,13 +4,9 @@ CodeSutra is a Python/R-inspired programming language designed to be **extremely
 
 ## ✨ Key Features
 
-- **Easy Syntax**: Clean, readable syntax inspired by Python
-- **Automatic Memory Management**: Garbage collection built-in
-- **Math & Data Capabilities**: Rich math operations and data structure support
-- **High-Level Abstractions**: Work with concepts, not low-level details
-- **Fast Prototyping**: Interactive evaluation and REPL
-- **Rich Standard Library**: Math, string, list, and data utilities
 
+- **🚀 Native Tensor Type**: First-class support for multi-dimensional arrays with NumPy (CPU) and PyTorch (GPU) backends
+- **🐍 Python Interoperability**: Seamlessly use NumPy, Pandas, PyTorch, TensorFlow, and other Python libraries from CodeSutra
 ## 📋 Language Basics
 
 ### Hello World
@@ -64,6 +60,32 @@ result = sqrt(16)        # 4
 power = pow(2, 3)        # 8
 rounded = round(3.14159, 2)  # 3.14
 ```
+
+### 🎯 Native Tensors for AI/ML
+```codesutra
+# Create tensors from lists
+t1 = tensor([1, 2, 3]);
+t2 = tensor([4, 5, 6]);
+
+# Arithmetic operations
+result = t1 + t2;       # [5, 7, 9]
+product = t1 * 2;       # [2, 4, 6]
+
+# Tensor properties
+print(t1.shape);        # [3]
+print(t1.dtype);        # int64
+print(t1.device);       # cpu
+
+# Reduction operations
+total = sum(t1);        # 6
+average = mean(t1);     # 2.0
+
+# Create special tensors
+zeros_matrix = tensor.zeros([3, 3]);
+ones_vector = tensor.ones([5]);
+```
+
+See [TENSOR.md](docs/TENSOR.md) for comprehensive tensor documentation.
 
 ## 🏗️ Project Structure
 

@@ -8,6 +8,26 @@ from typing import Any, List, Dict, Callable, Optional
 from python_bridge import wrap
 
 
+class TensorModule:
+    """Callable module for tensor creation and factory functions."""
+    
+    def __call__(self, value: Any, dtype: Optional[str] = None, device: str = "cpu"):
+        """Allow tensor(...) calls."""
+        return BuiltinLibrary.tensor(value, dtype, device)
+    
+    def __getattr__(self, name: str):
+        """Support tensor.zeros, tensor.ones, etc."""
+        methods = {
+            'zeros': BuiltinLibrary.tensor_zeros,
+            'ones': BuiltinLibrary.tensor_ones,
+            'arange': BuiltinLibrary.tensor_arange,
+            'random': BuiltinLibrary.tensor_random,
+        }
+        if name in methods:
+            return methods[name]
+        raise AttributeError(f"Tensor has no attribute '{name}'")
+
+
 class CodeSutraFunction:
     """Represents a callable function value"""
     
@@ -223,6 +243,80 @@ class BuiltinLibrary:
     
     @staticmethod
     def min(*args) -> float:
+        """Minimum value - works with tensors and numbers"""
+        from tensor_value import TensorValue
+        
+        if not args:
+            return None
+        
+        # If first arg is a tensor, call its min method
+        if len(args) == 1 and isinstance(args[0], TensorValue):
+            return args[0].min()
+        
+        # Otherwise work with numbers
+        nums = [BuiltinLibrary.to_number(v) for v in args]
+        return min(nums)
+    
+    @staticmethod
+    def max(*args) -> float:
+        """Maximum value - works with tensors and numbers"""
+        from tensor_value import TensorValue
+        
+        if not args:
+            return None
+        
+        # If first arg is a tensor, call its max method
+        if len(args) == 1 and isinstance(args[0], TensorValue):
+            return args[0].max()
+        
+        # Otherwise work with numbers
+        nums = [BuiltinLibrary.to_number(v) for v in args]
+        return max(nums)
+    
+    @staticmethod
+    def sum(*args) -> float:
+        """Sum values - works with tensors, lists, and numbers"""
+        from tensor_value import TensorValue
+        
+        if not args:
+            return 0
+        
+        # If single tensor, call its sum method
+        if len(args) == 1 and isinstance(args[0], TensorValue):
+            return args[0].sum()
+        
+        # If single list, sum its elements
+        if len(args) == 1 and isinstance(args[0], list):
+            return sum(BuiltinLibrary.to_number(v) for v in args[0])
+        
+        # Otherwise sum all arguments
+        return sum(BuiltinLibrary.to_number(v) for v in args)
+    
+    @staticmethod
+    def mean(*args) -> float:
+        """Mean/average - works with tensors, lists, and numbers"""
+        from tensor_value import TensorValue
+        
+        if not args:
+            return 0
+        
+        # If single tensor, call its mean method
+        if len(args) == 1 and isinstance(args[0], TensorValue):
+            return args[0].mean()
+        
+        # If single list, calculate mean
+        if len(args) == 1 and isinstance(args[0], list):
+            if not args[0]:
+                return 0
+            return sum(BuiltinLibrary.to_number(v) for v in args[0]) / len(args[0])
+        
+        # Otherwise calculate mean of all arguments
+        if not args:
+            return 0
+        return sum(BuiltinLibrary.to_number(v) for v in args) / len(args)
+    
+    @staticmethod
+    def min_old(*args) -> float:
         """Minimum value"""
         if not args:
             return None
@@ -230,7 +324,7 @@ class BuiltinLibrary:
         return min(nums)
     
     @staticmethod
-    def max(*args) -> float:
+    def max_old(*args) -> float:
         """Maximum value"""
         if not args:
             return None
@@ -344,6 +438,174 @@ class BuiltinLibrary:
         s = BuiltinLibrary.to_string(string)
         c = int(BuiltinLibrary.to_number(count))
         return s * c
+    
+    @staticmethod
+    def tensor(value: Any, dtype: Optional[str] = None, device: str = "cpu"):
+        """
+        Create a tensor from a list, or wrap a numpy/torch array.
+        
+        Args:
+            value: A CodeSutra list or Python array-like
+            dtype: Optional dtype string (e.g., "float32", "int64")
+            device: "cpu" or "cuda"
+        
+        Returns:
+            TensorValue
+        """
+        from tensor_value import TensorValue, HAS_NUMPY, HAS_TORCH, np, torch
+        
+        # Convert CodeSutra list or PyProxy to Python native
+        if isinstance(value, list):
+            value = value  # already a list
+        else:
+            # Try to unwrap PyProxy or other types
+            value_unwrapped = __py_unwrap(value) if not isinstance(value, list) else value
+            value = value_unwrapped
+        
+        # Determine backend
+        backend = None
+        if device.startswith("cuda"):
+            if not HAS_TORCH:
+                raise RuntimeError(
+                    "PyTorch is required for GPU tensors. "
+                    "Install with: pip install torch"
+                )
+            if not torch.cuda.is_available():
+                raise RuntimeError("CUDA is not available on this system.")
+            backend = "torch"
+        else:
+            if not HAS_NUMPY:
+                raise RuntimeError(
+                    "NumPy is required for tensors. "
+                    "Install with: pip install numpy"
+                )
+            backend = "numpy"
+        
+        # Map dtype string to backend dtype
+        if backend == "numpy":
+            if dtype:
+                value = np.array(value, dtype=dtype)
+            else:
+                value = np.array(value)
+        elif backend == "torch":
+            dtype_map = {
+                "float32": torch.float32,
+                "float64": torch.float64,
+                "int32": torch.int32,
+                "int64": torch.int64,
+                "int16": torch.int16,
+                "uint8": torch.uint8,
+                "bool": torch.bool,
+            }
+            torch_dtype = dtype_map.get(dtype, None) if dtype else None
+            value = torch.tensor(value, dtype=torch_dtype, device=device)
+        
+        return TensorValue(value, backend=backend)
+    
+    @staticmethod
+    def tensor_zeros(shape, dtype: Optional[str] = None, device: str = "cpu"):
+        """Create a tensor of zeros."""
+        from tensor_value import TensorValue, HAS_NUMPY, HAS_TORCH, np, torch
+        
+        backend = "torch" if device.startswith("cuda") else "numpy"
+        
+        if backend == "numpy":
+            if dtype:
+                obj = np.zeros(shape, dtype=dtype)
+            else:
+                obj = np.zeros(shape)
+        else:
+            if not HAS_TORCH:
+                raise RuntimeError("PyTorch required for GPU tensors")
+            dtype_map = {
+                "float32": torch.float32,
+                "float64": torch.float64,
+                "int32": torch.int32,
+                "int64": torch.int64,
+            }
+            torch_dtype = dtype_map.get(dtype, torch.float32)
+            obj = torch.zeros(shape, dtype=torch_dtype, device=device)
+        
+        return TensorValue(obj, backend=backend)
+    
+    @staticmethod
+    def tensor_ones(shape, dtype: Optional[str] = None, device: str = "cpu"):
+        """Create a tensor of ones."""
+        from tensor_value import TensorValue, HAS_NUMPY, HAS_TORCH, np, torch
+        
+        backend = "torch" if device.startswith("cuda") else "numpy"
+        
+        if backend == "numpy":
+            if dtype:
+                obj = np.ones(shape, dtype=dtype)
+            else:
+                obj = np.ones(shape)
+        else:
+            if not HAS_TORCH:
+                raise RuntimeError("PyTorch required for GPU tensors")
+            dtype_map = {
+                "float32": torch.float32,
+                "float64": torch.float64,
+                "int32": torch.int32,
+                "int64": torch.int64,
+            }
+            torch_dtype = dtype_map.get(dtype, torch.float32)
+            obj = torch.ones(shape, dtype=torch_dtype, device=device)
+        
+        return TensorValue(obj, backend=backend)
+    
+    @staticmethod
+    def tensor_arange(start, end=None, step=1, dtype: Optional[str] = None, device: str = "cpu"):
+        """Create a tensor with evenly spaced values."""
+        from tensor_value import TensorValue, HAS_NUMPY, HAS_TORCH, np, torch
+        
+        if end is None:
+            end = start
+            start = 0
+        
+        backend = "torch" if device.startswith("cuda") else "numpy"
+        
+        if backend == "numpy":
+            if dtype:
+                obj = np.arange(start, end, step, dtype=dtype)
+            else:
+                obj = np.arange(start, end, step)
+        else:
+            if not HAS_TORCH:
+                raise RuntimeError("PyTorch required for GPU tensors")
+            dtype_map = {
+                "float32": torch.float32,
+                "float64": torch.float64,
+                "int32": torch.int32,
+                "int64": torch.int64,
+            }
+            torch_dtype = dtype_map.get(dtype, None)
+            obj = torch.arange(start, end, step, dtype=torch_dtype, device=device)
+        
+        return TensorValue(obj, backend=backend)
+    
+    @staticmethod
+    def tensor_random(shape, dtype: Optional[str] = None, device: str = "cpu"):
+        """Create a tensor with random values in [0, 1)."""
+        from tensor_value import TensorValue, HAS_NUMPY, HAS_TORCH, np, torch
+        
+        backend = "torch" if device.startswith("cuda") else "numpy"
+        
+        if backend == "numpy":
+            obj = np.random.rand(*shape) if isinstance(shape, (list, tuple)) else np.random.rand(shape)
+            if dtype:
+                obj = obj.astype(dtype)
+        else:
+            if not HAS_TORCH:
+                raise RuntimeError("PyTorch required for GPU tensors")
+            dtype_map = {
+                "float32": torch.float32,
+                "float64": torch.float64,
+            }
+            torch_dtype = dtype_map.get(dtype, torch.float32)
+            obj = torch.rand(shape, dtype=torch_dtype, device=device)
+        
+        return TensorValue(obj, backend=backend)
 
 
 def print_function(*args) -> None:
@@ -402,6 +664,25 @@ def __py_unwrap(x: Any):
     return x
 
 
+def __py_is_proxy(x: Any) -> bool:
+    """Check if an object is a PyProxy (wrapping a Python object)."""
+    return hasattr(x, '_obj')
+
+
+def __py_is_ndarray(x: Any) -> bool:
+    """Check if an object is a NumPy ndarray (or a proxy wrapping one)."""
+    try:
+        import numpy as np
+    except Exception:
+        return False
+
+    obj = x
+    if hasattr(x, '_obj'):
+        obj = getattr(x, '_obj')
+
+    return isinstance(obj, np.ndarray)
+
+
 def create_globals() -> Dict[str, Any]:
     """Create global environment with built-in functions"""
     return {
@@ -452,6 +733,8 @@ def create_globals() -> Dict[str, Any]:
         'round': BuiltinLibrary.round,
         'min': BuiltinLibrary.min,
         'max': BuiltinLibrary.max,
+        'sum': BuiltinLibrary.sum,
+        'mean': BuiltinLibrary.mean,
         'sin': BuiltinLibrary.sin,
         'cos': BuiltinLibrary.cos,
         'tan': BuiltinLibrary.tan,
@@ -465,10 +748,16 @@ def create_globals() -> Dict[str, Any]:
         # Constants
         'PI': math.pi,
         'E': math.e,
+        
+        # Tensor type (callable module with factory methods)
+        'tensor': TensorModule(),
+        
         # Python interop helpers
         'py': {
             'as_ndarray': lambda x: __py_as_ndarray(x),
             'as_dataframe': lambda x: __py_as_dataframe(x),
             'unwrap': lambda x: __py_unwrap(x),
+            'is_proxy': lambda x: __py_is_proxy(x),
+            'is_ndarray': lambda x: __py_is_ndarray(x),
         }
     }
